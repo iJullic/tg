@@ -1,5 +1,4 @@
 import { Telegraf } from 'telegraf';
-import { log } from 'console';
 import { Bot } from './bot';
 import { ConfigService } from './services/config.service';
 
@@ -11,7 +10,6 @@ export class App {
 		const telegraf = new Telegraf(token);
 		const bot = new Bot(telegraf, token, sender);
 		const first = await bot.init();
-		log(1);
 		if (first) {
 			const token = configService.get('OLD_TOKEN');
 			const sender = configService.get('OLD_SENDER');

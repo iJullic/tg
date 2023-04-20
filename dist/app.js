@@ -22,7 +22,7 @@ class App {
             const telegraf = new telegraf_1.Telegraf(token);
             const bot = new bot_1.Bot(telegraf, token, sender);
             const first = yield bot.init();
-            if (!first) {
+            if (first) {
                 const token = configService.get('OLD_TOKEN');
                 const sender = configService.get('OLD_SENDER');
                 const telegraf = new telegraf_1.Telegraf(token);
