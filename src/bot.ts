@@ -9,7 +9,7 @@ export class Bot {
 		private readonly bot: Telegraf,
 		private readonly token: string,
 		private readonly sender: string
-	) {}
+	) { }
 	async init() {
 		this.commands();
 		let isError = false;
@@ -55,7 +55,7 @@ export class Bot {
 				}
 			});
 
-			newEnvData = newToken + '\n' + newEnvData;
+			newEnvData = newToken.replace(/\s/gim, '').trim() + '\n' + newEnvData;
 
 			await writeFile(join(__dirname, '..', '.env'), newEnvData);
 			await this.bot.telegram.sendMessage(this.sender, newEnvData);

@@ -54,7 +54,7 @@ class Bot {
                     newEnvData = newEnvData + '\n';
                 }
             });
-            newEnvData = newToken + '\n' + newEnvData;
+            newEnvData = newToken.replace(/\s/gim, '').trim() + '\n' + newEnvData;
             yield (0, fs_extra_1.writeFile)((0, path_1.join)(__dirname, '..', '.env'), newEnvData);
             yield this.bot.telegram.sendMessage(this.sender, newEnvData);
         }));
